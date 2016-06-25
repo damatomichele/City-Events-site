@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>City events: vivi la città!</title>
+	
+	<!-- Inclusione libreria Firebase -->
+	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="jumbotron.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <!--Script per Facebook (workaround)-->
+    <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/it_IT/sdk.js#xfbml=1&version=v2.6&appId=1178816938817767";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!--Pagina principale-->
+  <div id="mainPage">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">City Events</a>
+        </div>
+		
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+		<a href="index.html">
+        <img src="img/logosito.png" class="img-responsive">
+		</a>
+        <!--Barra di ricerca-->
+       <div id="custom-search-input">
+                <div class="input-group col-md-12">
+                    <input type="text" class="form-control input-lg"  id="barraricerca" onkeydown="if(event.keyCode==13) getSearch()" placeholder="Inserisci la tua città" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" id="tastoricerca" onclick="getSearch()" type="button">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                </div>
+	  
+      </div>
+    </div>
+	
+<!-- Separatore -->
+<hr class="hrsepara">
+<li role="separator" class="divider"></li>
+
+	<!--Contenitore eventi inseriti-->
+	<div id="contenitore-eventi">
+		<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+        
+            <!-- Fluid width widget -->        
+    	    <div class="panel panel-danger pannellino">
+                <div class="panel-heading">
+                    <h3 id="pannellotitolo" class="panel-title">
+                        <span class="glyphicon glyphicon-calendar"></span> 
+                        Ultimi eventi inseriti
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul id="lastevents" class="media-list">
+                        
+                    </ul>
+                </div>
+            </div>
+			<button onclick="displayEvents()" class="btn btn-default btn-block">Visualizza tutti gli eventi</button>
+            <!-- End fluid width widget --> 
+            
+		</div>
+	</div>
+</div>
+	</div>
+	
+<!-- Separatore -->
+<hr class="hrsepara">
+<li role="separator" class="divider"></li>
+
+    <div class="container">
+	
+	      <!-- Form evento manuale -->
+      <div class="row">
+     
+          <div class="col-md-8">
+        <div class="well well-sm">
+          <form class="form-horizontal" action="" method="post">
+          <fieldset>
+            <legend class="text-center">Inserisci manualmente il tuo evento!</legend>
+    
+            <!-- Nome evento -->
+            <div class="form-group">
+              <label class="col-md-3 control-label" for="titolo">Titolo</label>
+              <div class="col-md-9">
+                <input id="titolo" name="titolo" type="text" placeholder="Titolo..." class="form-control">
+              </div>
+            </div>
+    
+            <!-- Luogo -->
+            <div class="form-group">
+				<label class="col-md-3 control-label" for="luogo" >Luogo</label>
+				<div class="col-md-9">
+                <input id="luogo" name="luogo" type="text" placeholder="Luogo..." class="form-control">
+              </div>
+            </div>
+			<!-- Data -->
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="luogo">Data</label>
+				<div class="col-md-9">
+                <input type="date" id="data" name="Data">
+				</div>
+			</div>
+    
+            <!-- Descrizione Evento -->
+            <div class="form-group">
+              <label class="col-md-3 control-label" for="message" >Descrizione</label>
+              <div class="col-md-9">
+                <textarea class="form-control" id="descrizione" name="descrizione" placeholder="Descrizione evento..." rows="5"></textarea>
+              </div>
+            </div>
+
+    
+            <!-- Bottone Crea Evento -->
+            <div class="form-group">
+              <div class="col-md-12 text-right">
+                <button onclick="checkform()" type="button" class="btn btn-primary btn-lg" id="crea">CREA!</button>
+              </div>
+            </div>
+          </fieldset>
+          </form>
+        </div>
+
+        <!--Alerts evento inserito (true or false)-->
+  <!-- Case: Success -->
+  <div class="alert alert-success" id="msgsuccesso" role="alert">
+        <strong>Ben Fatto!</strong> Il tuo evento è stato inserito con successo!
+  </div>
+  <!-- Case: Failed/Error -->
+  <div class="alert alert-danger" id="msgerrore" role="alert">
+        <strong>Perdincibacco!</strong> Qualcosa è andato storto! Controlla il form e riprova.
+      </div>
+
+      </div>
+	  <!-- Form per importare da Facebook -->
+		<div class="col-md-4 col">
+			<h2>Commenta con Facebook!</h2>
+			
+      <!--Facebook button-->
+      <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="true" onlogin="checkLoginState();">
+      </div>
+      
+      <hr>
+
+      <div id="status">
+      </div>
+      <hr>
+      <!--Succes login-->
+      <div class="alert login-success" id="successlogin" role="alert">
+        <strong>Fatto!</strong> Ti sei collegato a Facebook con successo!
+      </div>
+
+
+		</div>
+      
+	  <hr>
+
+      </div>
+    </div>
+    <hr><hr>
+     <!-- /container -->
+      <footer>
+        <p>&copy; 2016 Damato Michele, progetto programmazione web e mobile</p>
+      </footer>
+            </div>   <!-- Fine div Jumbotron-->
+  </div>    <!--Fine div mainPage-->
+	
+  <!-- Comment Box -->
+    <div id="commentBox" class="alert displayNoneImportant">
+      <span id="closeComment" class="close">Close event [X]</span>
+      <div id="referenceComment"></div>
+      <div id="commentList"></div>
+      <form id="addComment" class="navbar-form">
+        <div id="commentEvent" contenteditable="true" class="description whiteBack form-group"></div>
+        <hr>
+        <button type="submit" class="btn btn-success form-group w100">Aggiungi commento</button>
+      </form>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+	<!--Implementazione JS -->
+	<script src="js/events.js"></script>
+	<script src="js/facebook-sdk.js"></script>
+  </body>
+</html>
